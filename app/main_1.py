@@ -1,5 +1,5 @@
 from fastapi import Depends, FastAPI, HTTPException, Form, APIRouter, Query
-from fastapi.security import HTTPBasic, HTTPBasicCredentials, OAuth2AuthorizationCodeBearer, OAuth2PasswordBearer
+from fastapi.security import HTTPBasic, HTTPBasicCredentials, OAuth2AuthorizationCodeBearer
 from authlib.integrations.starlette_client import OAuth
 from fastapi.responses import JSONResponse
 from datetime import timedelta
@@ -12,7 +12,6 @@ from azure.keyvault.secrets import SecretClient
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_jwt_auth.exceptions import AuthJWTException
 from pydantic import BaseModel
-from oauth2Clientcredentials import Oauth2ClientCredentials
 from az.cli import az
 import os
 import requests
@@ -35,9 +34,10 @@ kube_client = client.CoreV1Api()
 app = FastAPI(title="Master Blender API (B/S/H)",
     description="**This app is for creating, deleting, listing and getting info about jenkins instances.**",
     version="0.0.1")
-oauth2_scheme = Oauth2ClientCredentials(
+oauth2_scheme = OAuth2AuthorizationCodeBearer(
+    authorizationUrl="https://login.microsoftonline.com/0ae51e19-07c8-4e4b-bb6d-648ee58410f4/oauth2/authorize",
     tokenUrl="https://login.microsoftonline.com/0ae51e19-07c8-4e4b-bb6d-648ee58410f4/oauth2/token",
-    scopes={"Files.Read": "Files.Read"}
+    scopes={"Files.Read": "Files.Read", "profile": "User profile scope"}
 )
 
 
